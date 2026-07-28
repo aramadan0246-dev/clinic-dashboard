@@ -107,23 +107,54 @@ git commit -m "chore: scaffold SPFx 1.23.2 clinic dashboard solution (Heft toolc
 
 **Interfaces:**
 - Produces: `@pnp/sp` and `lucide-react` available as imports for all later tasks.
+- Produces: a standalone `jest.config.js` + `jest.setup.js` at the project root, giving every later task a fast (`npx jest <path>`, seconds not minutes) TDD loop that runs directly against TypeScript source — independent of Heft's `lib-commonjs`-compiled, webpack-gated `heft test` pipeline (verified during planning: `heft test` only discovers pre-compiled `lib-commonjs/**/*.test.js`, requires a full ~3-5 minute webpack build first, and is reserved for Task 24's final production validation).
 
-- [ ] **Step 1: Install runtime dependencies**
+- [x] **Step 1: Install runtime dependencies** *(done)*
 
 ```powershell
 cd d:\ClinicDashboardPatientPortal\clinic-dashboard-spfx
 npm install @pnp/sp@^4.0.0 @pnp/queryable@^4.0.0 lucide-react@^0.400.0
 ```
 
-- [ ] **Step 2: Install dev/test dependencies**
+- [x] **Step 2: Install dev/test dependencies** *(done — verified working)*
 
 ```powershell
-npm install --save-dev @testing-library/react@^12.1.5 @testing-library/jest-dom@^5.16.5 identity-obj-proxy@^3.3.1
+npm install --save-dev jest@^30.0.0 ts-jest@latest @testing-library/react@^12.1.5 @testing-library/jest-dom@^5.16.5 identity-obj-proxy@latest
 ```
 
-(`@testing-library/react@12` is the last version compatible with React 17, which SPFx 1.20 uses.)
+Resolved versions: `jest@30.0.0`, `ts-jest@29.4.12` (the exact `ts-jest@29.2.0` originally pinned here has a peer dependency on `jest@^29.0.0` and fails with `ERESOLVE` against `jest@30` — always let `ts-jest` float to `latest` against a pinned `jest@^30.0.0`), `identity-obj-proxy@3.0.0` (the `3.3.1` originally pinned here doesn't exist on npm — use `latest`). `@testing-library/react@12` is the last version compatible with React 17, which this scaffold uses. `jest`/`ts-jest` are added explicitly as top-level devDependencies — Heft bundles its own internal Jest, but a standalone `jest`/`ts-jest` pair is what lets `npx jest <path>` resolve and run directly against `.ts`/`.tsx` source.
 
-- [ ] **Step 3: Create the folder skeleton**
+- [x] **Step 3: Add a standalone jest.config.js and setup file** *(done — verified working, 1.3s per test file)*
+
+The project's `tsconfig.json` (via the SPFx rig) sets `"module": "esnext"`, which Node/Jest's default CommonJS `require()` can't load directly — `ts-jest` must be told to compile test files to CommonJS regardless of the main build's module target. `isolatedModules: true` is required too: without it, ts-jest performs full whole-program type-checking on every run, which took ~80-100s for a single trivial test (full type errors still surface at `npm run build`/Heft's real TypeScript compile, so this is a safe trade for a fast test loop):
+
+```javascript
+// jest.config.js (project root, next to package.json)
+module.exports = {
+  preset: "ts-jest",
+  testEnvironment: "jsdom",
+  roots: ["<rootDir>/src"],
+  testMatch: ["**/*.test.ts", "**/*.test.tsx"],
+  moduleNameMapper: {
+    "\\.(scss|sass|css)$": "identity-obj-proxy",
+  },
+  transform: {
+    "^.+\\.tsx?$": ["ts-jest", { isolatedModules: true, tsconfig: { module: "commonjs", jsx: "react" } }],
+  },
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+};
+```
+
+(ts-jest emits a deprecation warning that `isolatedModules` should move to `tsconfig.json`'s `compilerOptions.isolatedModules` instead — harmless on the installed `ts-jest@29.4.12`; not applied here because it would also affect Heft's production TypeScript compile, which is out of scope to touch.)
+
+```javascript
+// jest.setup.js (project root, next to package.json)
+require("@testing-library/jest-dom");
+```
+
+These two files already exist at `clinic-dashboard-spfx/jest.config.js` and `clinic-dashboard-spfx/jest.setup.js` — verified via a throwaway smoke test (`npx jest` correctly compiled and ran a trivial `.ts` test file, 1 passed).
+
+- [x] **Step 4: Create the folder skeleton** *(done)*
 
 ```powershell
 $dirs = @(
@@ -144,19 +175,30 @@ foreach ($d in $dirs) {
 }
 ```
 
-- [ ] **Step 4: Verify install didn't break the build**
+- [x] **Step 5: Verify jest itself works (smoke check)** *(done — 1 passed)*
+
+```powershell
+New-Item -ItemType File -Force -Path "src/_jestSmokeCheck.test.ts" | Out-Null
+Set-Content -Path "src/_jestSmokeCheck.test.ts" -Value 'test("jest smoke check", () => { expect(1 + 1).toBe(2); });'
+npx jest src/_jestSmokeCheck.test.ts
+Remove-Item "src/_jestSmokeCheck.test.ts"
+```
+
+Expected: `npx jest` reports 1 passed test suite, 1 passed test — confirming `ts-jest` resolves and compiles a `.ts` file correctly before any later task depends on it. Remove the throwaway file immediately after (it is not part of the deliverable).
+
+- [x] **Step 6: Verify install didn't break the production build** *(done — build succeeded, produced clinic-dashboard-spfx.sppkg)*
 
 ```powershell
 npm run build
 ```
 
-Expected: completes with no errors (Heft runs test + package-solution).
+Expected: completes with no errors (Heft runs its own internal test + package-solution — this is unrelated to and unaffected by the standalone jest.config.js above, which Heft's pipeline does not read).
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 7: Commit**
 
 ```powershell
 git add clinic-dashboard-spfx
-git commit -m "chore: add PnPjs/lucide-react deps and module folder skeleton"
+git commit -m "chore: add PnPjs/lucide-react deps, standalone jest config, and module folder skeleton"
 ```
 
 ---
