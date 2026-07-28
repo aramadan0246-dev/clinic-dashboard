@@ -194,7 +194,7 @@ npm run build
 
 Expected: completes with no errors (Heft runs its own internal test + package-solution — this is unrelated to and unaffected by the standalone jest.config.js above, which Heft's pipeline does not read).
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit** *(done — commit 80c22e9)*
 
 ```powershell
 git add clinic-dashboard-spfx
