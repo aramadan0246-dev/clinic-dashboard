@@ -75,7 +75,7 @@ Answer the prompts exactly as follows:
 
 Result: SPFx **1.23.2** scaffold, Heft-based build (`@rushstack/heft`), React 17. `package.json` has no `gulpfile.js` — all later "gulp" commands in this plan (`gulp serve`, `gulp build`, `gulp bundle --ship`, `gulp package-solution --ship`) are superseded by the npm scripts below.
 
-- [ ] **Step 4: Install dependencies and verify the scaffold builds**
+- [x] **Step 4: Install dependencies and verify the scaffold builds**
 
 ```powershell
 npm install
