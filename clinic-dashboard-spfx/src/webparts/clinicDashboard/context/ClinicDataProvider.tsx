@@ -20,6 +20,7 @@ export interface IToast {
 
 export interface IClinicData {
   status: "loading" | "ready" | "error";
+  errorMessage: string | undefined;
   doctors: IDoctor[];
   patients: IPatient[];
   appointments: IAppointment[];
@@ -62,6 +63,7 @@ export const ClinicDataProvider: React.FC<{ context: WebPartContext; children: R
   children,
 }) => {
   const [status, setStatus] = React.useState<"loading" | "ready" | "error">("loading");
+  const [errorMessage, setErrorMessage] = React.useState<string | undefined>(undefined);
   const [doctors, setDoctors] = React.useState<IDoctor[]>([]);
   const [patients, setPatients] = React.useState<IPatient[]>([]);
   const [appointments, setAppointments] = React.useState<IAppointment[]>([]);
@@ -98,7 +100,12 @@ export const ClinicDataProvider: React.FC<{ context: WebPartContext; children: R
         setStaffRoles(r);
         setStatus("ready");
       } catch (e) {
-        if (!cancelled) setStatus("error");
+        // eslint-disable-next-line no-console
+        console.error("ClinicDataProvider: failed to load clinic data", e);
+        if (!cancelled) {
+          setStatus("error");
+          setErrorMessage(e instanceof Error ? e.message : String(e));
+        }
       }
     })();
     return () => {
@@ -354,6 +361,7 @@ export const ClinicDataProvider: React.FC<{ context: WebPartContext; children: R
 
   const value: IClinicData = {
     status,
+    errorMessage,
     doctors,
     patients,
     appointments,

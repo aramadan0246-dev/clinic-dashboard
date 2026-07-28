@@ -134,6 +134,8 @@ function ClinicDashboardContent({ context }: IClinicDashboardProps): JSX.Element
           .menu-btn { display: flex !important; }
         }
         a, button:focus-visible, [tabindex]:focus-visible { outline: 2px solid ${C.teal}; outline-offset: 2px; }
+        .CanvasZone > :first-child, .CanvasZone { max-width: 100% !important; }
+        .CanvasSection-xl4 > :first-child { margin: 0px !important; padding: 0px !important; }
       `}</style>
 
       <div style={{ display: "flex", minHeight: "100vh" }}>
@@ -206,7 +208,12 @@ function ClinicDashboardContent({ context }: IClinicDashboardProps): JSX.Element
 
           {data.status === "error" && (
             <div style={{ background: C.urgentSoft, border: `1px solid ${C.urgent}`, borderRadius: 16, padding: 20, color: C.urgent, fontFamily: "Inter, sans-serif" }}>
-              Couldn&apos;t load clinic data. Please refresh the page to try again.
+              <div>Couldn&apos;t load clinic data. Please refresh the page to try again.</div>
+              {data.errorMessage && (
+                <div style={{ marginTop: 8, fontFamily: "IBM Plex Mono, monospace", fontSize: 12, opacity: 0.85 }}>
+                  {data.errorMessage}
+                </div>
+              )}
             </div>
           )}
 
