@@ -65,17 +65,38 @@ test("CommunicationsStaff can only manage news", () => {
   expect(result.current.canAddPatient).toBe(false);
 });
 
-test("ClinicalOperationsDirector and unmatched users are read-only", () => {
-  const director = renderHook(() =>
+test("unmatched users are read-only", () => {
+  const { result } = renderHook(() => usePermissions(role({ role: undefined })));
+  const p = result.current;
+  expect(p.canAddPatient).toBe(false);
+  expect(p.canDischargePatient).toBe(false);
+  expect(p.canAddDoctor).toBe(false);
+  expect(p.canBookAppointment).toBe(false);
+  expect(p.canAddService).toBe(false);
+  expect(p.canManageNews).toBe(false);
+  expect(p.canReassignPhysician(999, "Dr. Anyone")).toBe(false);
+  expect(p.canToggleDoctorStatus(999)).toBe(false);
+  expect(p.canManageService(1)).toBe(false);
+});
+
+test("ClinicalOperationsDirector is a full admin with access to everything", () => {
+  const { result } = renderHook(() =>
     usePermissions(role({ role: "ClinicalOperationsDirector" }))
-  ).result.current;
-  const unmatched = renderHook(() => usePermissions(role({ role: undefined }))).result.current;
-  for (const p of [director, unmatched]) {
-    expect(p.canAddPatient).toBe(false);
-    expect(p.canDischargePatient).toBe(false);
-    expect(p.canAddDoctor).toBe(false);
-    expect(p.canBookAppointment).toBe(false);
-    expect(p.canAddService).toBe(false);
-    expect(p.canManageNews).toBe(false);
-  }
+  );
+  const p = result.current;
+  expect(p.canAddPatient).toBe(true);
+  expect(p.canDischargePatient).toBe(true);
+  expect(p.canAdmitAsUrgent).toBe(true);
+  expect(p.canAddDoctor).toBe(true);
+  expect(p.canRemoveDoctor).toBe(true);
+  expect(p.canBookAppointment).toBe(true);
+  expect(p.canCancelAppointment).toBe(true);
+  expect(p.canProgressAppointmentStatus).toBe(true);
+  expect(p.canAddService).toBe(true);
+  expect(p.canManageNews).toBe(true);
+  // Function-based permissions are unconditional for admin, unlike ChargeNurse
+  // (which also passes every id) or Physician/DepartmentLead (which don't).
+  expect(p.canReassignPhysician(999, "Dr. Anyone")).toBe(true);
+  expect(p.canToggleDoctorStatus(999)).toBe(true);
+  expect(p.canManageService(999)).toBe(true);
 });

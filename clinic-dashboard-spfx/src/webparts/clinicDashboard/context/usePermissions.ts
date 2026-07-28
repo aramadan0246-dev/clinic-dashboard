@@ -21,6 +21,7 @@ export function usePermissions(currentUserRole: ICurrentUserRole): IPermissions 
   const { role, departmentServiceId, doctorId } = currentUserRole;
 
   return useMemo<IPermissions>(() => {
+    const isAdmin = role === "ClinicalOperationsDirector";
     const isChargeNurse = role === "ChargeNurse";
     const isPhysician = role === "Physician";
     const isFrontDesk = role === "FrontDeskCoordinator";
@@ -28,22 +29,22 @@ export function usePermissions(currentUserRole: ICurrentUserRole): IPermissions 
     const isComms = role === "CommunicationsStaff";
 
     return {
-      canAddPatient: isChargeNurse || isFrontDesk,
-      canDischargePatient: isChargeNurse,
-      canAdmitAsUrgent: isChargeNurse,
+      canAddPatient: isAdmin || isChargeNurse || isFrontDesk,
+      canDischargePatient: isAdmin || isChargeNurse,
+      canAdmitAsUrgent: isAdmin || isChargeNurse,
       canReassignPhysician: (patientDoctorId) =>
-        isChargeNurse || (isPhysician && patientDoctorId === doctorId),
-      canAddDoctor: isChargeNurse,
-      canRemoveDoctor: isChargeNurse,
+        isAdmin || isChargeNurse || (isPhysician && patientDoctorId === doctorId),
+      canAddDoctor: isAdmin || isChargeNurse,
+      canRemoveDoctor: isAdmin || isChargeNurse,
       canToggleDoctorStatus: (targetDoctorId) =>
-        isChargeNurse || (isPhysician && targetDoctorId === doctorId),
-      canBookAppointment: isChargeNurse || isFrontDesk,
-      canCancelAppointment: isChargeNurse || isFrontDesk,
-      canProgressAppointmentStatus: isChargeNurse || isFrontDesk,
+        isAdmin || isChargeNurse || (isPhysician && targetDoctorId === doctorId),
+      canBookAppointment: isAdmin || isChargeNurse || isFrontDesk,
+      canCancelAppointment: isAdmin || isChargeNurse || isFrontDesk,
+      canProgressAppointmentStatus: isAdmin || isChargeNurse || isFrontDesk,
       canManageService: (serviceId) =>
-        isChargeNurse || (isDeptLead && serviceId === departmentServiceId),
-      canAddService: isChargeNurse,
-      canManageNews: isComms,
+        isAdmin || isChargeNurse || (isDeptLead && serviceId === departmentServiceId),
+      canAddService: isAdmin || isChargeNurse,
+      canManageNews: isAdmin || isComms,
     };
   }, [role, departmentServiceId, doctorId]);
 }
