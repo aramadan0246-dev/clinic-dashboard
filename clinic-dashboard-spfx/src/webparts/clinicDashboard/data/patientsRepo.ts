@@ -54,7 +54,8 @@ export function computeWaitLabel(flaggedAt: string): string {
 
 export async function getAllPatients(): Promise<IPatient[]> {
   const sp = getSP();
-  const items: IPatientListItem[] = await sp.web.lists
+  const items: IPatientListItem[] = [];
+  const query = sp.web.lists
     .getByTitle(LIST_NAMES.Patients)
     .items.select(
       "Id",
@@ -72,8 +73,10 @@ export async function getAllPatients(): Promise<IPatient[]> {
       "ClinicalNotes",
       "LastVisit"
     )
-    .expand("AssignedDoctor")
-    .getAll();
+    .expand("AssignedDoctor");
+  for await (const page of query) {
+    items.push(...(page as IPatientListItem[]));
+  }
   return items.map(toPatient);
 }
 

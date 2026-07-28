@@ -26,11 +26,14 @@ function toStaffRole(item: IStaffRoleListItem): IStaffRole {
 
 export async function getAllStaffRoles(): Promise<IStaffRole[]> {
   const sp = getSP();
-  const items: IStaffRoleListItem[] = await sp.web.lists
+  const items: IStaffRoleListItem[] = [];
+  const query = sp.web.lists
     .getByTitle(LIST_NAMES.StaffRoles)
     .items.select("Id", "Person/Title", "Person/Name", "Role", "DepartmentId", "DoctorId")
-    .expand("Person")
-    .getAll();
+    .expand("Person");
+  for await (const page of query) {
+    items.push(...(page as IStaffRoleListItem[]));
+  }
   return items.map(toStaffRole);
 }
 

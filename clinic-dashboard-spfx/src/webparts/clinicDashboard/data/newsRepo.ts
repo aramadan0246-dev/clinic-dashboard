@@ -30,12 +30,15 @@ function toNewsItem(item: INewsListItem): INewsItem {
 
 export async function getAllNews(): Promise<INewsItem[]> {
   const sp = getSP();
-  const items: INewsListItem[] = await sp.web.lists
+  const items: INewsListItem[] = [];
+  const query = sp.web.lists
     .getByTitle(LIST_NAMES.News)
     .items.select("Id", "Title", "Category", "Excerpt", "Body", "Created", "Author/Title")
     .expand("Author")
-    .orderBy("Created", false)
-    .getAll();
+    .orderBy("Created", false);
+  for await (const page of query) {
+    items.push(...(page as INewsListItem[]));
+  }
   return items.map(toNewsItem);
 }
 

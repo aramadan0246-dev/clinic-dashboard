@@ -22,10 +22,13 @@ function toDoctor(item: IDoctorListItem): IDoctor {
 
 export async function getAllDoctors(): Promise<IDoctor[]> {
   const sp = getSP();
-  const items: IDoctorListItem[] = await sp.web.lists
+  const items: IDoctorListItem[] = [];
+  const query = sp.web.lists
     .getByTitle(LIST_NAMES.Doctors)
-    .items.select("Id", "Title", "Specialty", "Room", "Status")
-    .getAll();
+    .items.select("Id", "Title", "Specialty", "Room", "Status");
+  for await (const page of query) {
+    items.push(...(page as IDoctorListItem[]));
+  }
   return items.map(toDoctor);
 }
 

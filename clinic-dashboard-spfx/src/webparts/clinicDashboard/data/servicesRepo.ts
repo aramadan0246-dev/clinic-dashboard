@@ -24,10 +24,13 @@ function toService(item: IServiceListItem): IService {
 
 export async function getAllServices(): Promise<IService[]> {
   const sp = getSP();
-  const items: IServiceListItem[] = await sp.web.lists
+  const items: IServiceListItem[] = [];
+  const query = sp.web.lists
     .getByTitle(LIST_NAMES.Services)
-    .items.select("Id", "Title", "Description", "Icon", "Status", "Queue")
-    .getAll();
+    .items.select("Id", "Title", "Description", "Icon", "Status", "Queue");
+  for await (const page of query) {
+    items.push(...(page as IServiceListItem[]));
+  }
   return items.map(toService);
 }
 

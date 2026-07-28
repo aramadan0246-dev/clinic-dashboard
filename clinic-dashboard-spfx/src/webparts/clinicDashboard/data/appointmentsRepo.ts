@@ -28,7 +28,8 @@ function toAppointment(item: IApptListItem): IAppointment {
 
 export async function getAllAppointments(): Promise<IAppointment[]> {
   const sp = getSP();
-  const items: IApptListItem[] = await sp.web.lists
+  const items: IApptListItem[] = [];
+  const query = sp.web.lists
     .getByTitle(LIST_NAMES.Appointments)
     .items.select(
       "Id",
@@ -41,8 +42,10 @@ export async function getAllAppointments(): Promise<IAppointment[]> {
       "Status"
     )
     .expand("Doctor")
-    .orderBy("ApptDateTime", true)
-    .getAll();
+    .orderBy("ApptDateTime", true);
+  for await (const page of query) {
+    items.push(...(page as IApptListItem[]));
+  }
   return items.map(toAppointment);
 }
 
