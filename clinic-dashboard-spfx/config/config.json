@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "clinic-dashboard-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/clinicDashboard/ClinicDashboardWebPart.js",
+          "manifest": "./src/webparts/clinicDashboard/ClinicDashboardWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "ClinicDashboardWebPartStrings": "lib/webparts/clinicDashboard/loc/{locale}.js"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "clinic-dashboard-spfx-client-side-solution",
+    "id": "88e1befc-8574-4399-a96b-e519258a318f",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.23.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "clinic-dashboard-spfx description"
+      },
+      "longDescription": {
+        "default": "clinic-dashboard-spfx description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "clinic-dashboard-spfx Feature",
+        "description": "The feature that activates elements of the clinic-dashboard-spfx solution.",
+        "id": "90d20125-f458-49bc-bc8a-2cc78208a8e7",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/clinic-dashboard-spfx.sppkg"
+  }
+}

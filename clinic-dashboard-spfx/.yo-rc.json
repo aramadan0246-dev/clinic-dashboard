@@ -1,0 +1,19 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "useGulp": false,
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "20.18.1",
+    "sdksVersions": {},
+    "version": "1.23.2",
+    "libraryName": "clinic-dashboard-spfx",
+    "libraryId": "88e1befc-8574-4399-a96b-e519258a318f",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "clinic-dashboard-spfx",
+    "solutionShortDescription": "clinic-dashboard-spfx description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
