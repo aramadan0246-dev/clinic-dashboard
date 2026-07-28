@@ -14,7 +14,7 @@ interface IPatientListItem {
   FlaggedAt: string;
   HeartRate: number | null;
   BloodPressure: string;
-  SpO2: string;
+  SPO: string;
   ClinicalNotes: string;
   LastVisit: string;
 }
@@ -32,7 +32,7 @@ function toPatient(item: IPatientListItem): IPatient {
     flaggedAt: item.FlaggedAt,
     heartRate: item.HeartRate,
     bloodPressure: item.BloodPressure,
-    spo2: item.SpO2,
+    spo2: item.SPO,
     clinicalNotes: item.ClinicalNotes,
     lastVisit: item.LastVisit,
   };
@@ -69,7 +69,7 @@ export async function getAllPatients(): Promise<IPatient[]> {
       "FlaggedAt",
       "HeartRate",
       "BloodPressure",
-      "SpO2",
+      "SPO",
       "ClinicalNotes",
       "LastVisit"
     )

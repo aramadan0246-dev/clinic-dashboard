@@ -4,10 +4,24 @@
 
 param(
   [Parameter(Mandatory = $true)]
-  [string]$SiteUrl = "https://7r4ptj.sharepoint.com/sites/CDPP"
+  [string]$SiteUrl = "https://7r4ptj.sharepoint.com/sites/CDPP",
+  [Parameter(Mandatory = $false)]
+  [string]$ClientId = "93938c97-a64e-4ea3-b160-8b8571f76f39"
 )
 
-Connect-PnPOnline -Url $SiteUrl -Interactive
+$ErrorActionPreference = "Stop"
+
+if (-not (Get-Module -ListAvailable -Name PnP.PowerShell)) {
+  Write-Host "PnP.PowerShell module not found. Installing for current user..." -ForegroundColor Yellow
+  Install-Module PnP.PowerShell -Scope CurrentUser -Force -AllowClobber
+}
+Import-Module PnP.PowerShell
+
+Write-Host "Connecting to $SiteUrl (a browser tab will open for sign-in)..." -ForegroundColor Cyan
+Connect-PnPOnline -Url $SiteUrl -Interactive -ClientId $ClientId
+
+##########################
+#Connect-PnPOnline -Url $SiteUrl -Interactive
 
 function Ensure-List {
   param([string]$Title, [string]$Template = "GenericList")
@@ -37,6 +51,18 @@ function Ensure-Text-Field {
   if (-not $field) {
     $type = if ($MultiLine) { "Note" } else { "Text" }
     Add-PnPField -List $ListTitle -InternalName $InternalName -DisplayName $DisplayName -Type $type -AddToDefaultView | Out-Null
+  }
+}
+
+function Ensure-Text-Field-Explicit {
+  # Add-PnPField's -InternalName is not always honored as the literal StaticName -
+  # SharePoint can silently re-derive/encode it from the display name instead
+  # (e.g. "SpO2" became "_x0053_pO2"). Raw FieldXml with an explicit Name/StaticName,
+  # the same approach already used for the Lookup/Person fields below, avoids this.
+  param([string]$ListTitle, [string]$InternalName, [string]$DisplayName)
+  $field = Get-PnPField -List $ListTitle -Identity $InternalName -ErrorAction SilentlyContinue
+  if (-not $field) {
+    Add-PnPFieldFromXml -List $ListTitle -FieldXml "<Field Type='Text' Name='$InternalName' StaticName='$InternalName' DisplayName='$DisplayName' />" | Out-Null
   }
 }
 
@@ -89,7 +115,7 @@ Ensure-Lookup-Field -ListTitle "Patients" -InternalName "AssignedDoctor" -Displa
 Ensure-DateTime-Field -ListTitle "Patients" -InternalName "FlaggedAt" -DisplayName "Flagged At"
 Ensure-Number-Field -ListTitle "Patients" -InternalName "HeartRate" -DisplayName "Heart Rate"
 Ensure-Text-Field -ListTitle "Patients" -InternalName "BloodPressure" -DisplayName "Blood Pressure"
-Ensure-Text-Field -ListTitle "Patients" -InternalName "SpO2" -DisplayName "SpO2"
+Ensure-Text-Field-Explicit -ListTitle "Patients" -InternalName "SPO" -DisplayName "SpO2"
 Ensure-Text-Field -ListTitle "Patients" -InternalName "ClinicalNotes" -DisplayName "Clinical Notes" -MultiLine
 Ensure-DateTime-Field -ListTitle "Patients" -InternalName "LastVisit" -DisplayName "Last Visit"
 
