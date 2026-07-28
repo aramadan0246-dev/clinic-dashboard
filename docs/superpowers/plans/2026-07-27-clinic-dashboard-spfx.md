@@ -2458,6 +2458,8 @@ git commit -m "feat: port shared UI primitives (tokens, Avatar, Pill, Modal, Sta
 
 ## Task 16: Dashboard module port
 
+> **EXECUTION ORDER CORRECTION (found while starting Task 16):** `DashboardView` composes `UrgentCasesPanel` (Task 17), `DoctorAvailabilityPanel` (Task 18), `AppointmentsPanel` (Task 19), `NewsPanel` (Task 21), and `ServicesStrip` (Task 20) — all built in *later*-numbered tasks. Tasks 17–21 are mutually independent (each only consumes Task 15's shared primitives + `models.ts` + its own repo + `IPermissions`), so the actual dependency-safe execution order is **17, 18, 19, 20, 21, then 16 (this task), then 22**. Do not implement Task 16 until 17–21 are all complete — its test would fail to even compile (`Cannot find module '../patients/UrgentCasesPanel'` etc.), not just fail assertions.
+
 **Files:**
 - Create: `src/webparts/clinicDashboard/components/dashboard/VitalsTicker.tsx`
 - Create: `src/webparts/clinicDashboard/components/dashboard/DashboardView.tsx`
