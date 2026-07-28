@@ -49,10 +49,10 @@ export function DashboardView({ doctors, urgentCases, appts, news, services, que
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <VitalsTicker urgentCount={urgentCases.length} availableCount={available} totalDoctors={doctors.length} />
       <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-        <StatCard label="Patients today" value="142" delta="8%" deltaDir="up" icon={Users} tint={C.teal} />
-        <StatCard label="Urgent cases" value={urgentCases.length} delta="2" deltaDir="up" icon={AlertTriangle} tint={C.urgent} />
-        <StatCard label="Doctors available" value={`${available}/${doctors.length}`} icon={Stethoscope} tint={C.primary} />
-        <StatCard label="Appointments today" value={appts.length} delta="3%" deltaDir="down" icon={CalendarDays} tint={C.amber} />
+        <StatCard label="Patients today" value="142" delta="8%" deltaDir="up" icon={Users as React.ComponentType<{ size?: number; color?: string }>} tint={C.teal} />
+        <StatCard label="Urgent cases" value={urgentCases.length} delta="2" deltaDir="up" icon={AlertTriangle as React.ComponentType<{ size?: number; color?: string }>} tint={C.urgent} />
+        <StatCard label="Doctors available" value={`${available}/${doctors.length}`} icon={Stethoscope as React.ComponentType<{ size?: number; color?: string }>} tint={C.primary} />
+        <StatCard label="Appointments today" value={appts.length} delta="3%" deltaDir="down" icon={CalendarDays as React.ComponentType<{ size?: number; color?: string }>} tint={C.amber} />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.6fr) minmax(280px,1fr)", gap: 18 }} className="dash-grid">
         <UrgentCasesPanel cases={urgentCases} onSelect={onSelectPatient} query={query} />

@@ -3,6 +3,11 @@ import * as React from "react";
 import { render, screen, act } from "@testing-library/react";
 import { ClinicDataProvider, useClinicData } from "./ClinicDataProvider";
 import * as doctorsRepo from "../data/doctorsRepo";
+import * as patientsRepo from "../data/patientsRepo";
+import * as apptsRepo from "../data/appointmentsRepo";
+import * as servicesRepo from "../data/servicesRepo";
+import * as newsRepo from "../data/newsRepo";
+import * as staffRolesRepo from "../data/staffRolesRepo";
 
 jest.mock("../data/doctorsRepo");
 jest.mock("../data/patientsRepo");
@@ -38,16 +43,11 @@ test("provider starts loading, then exposes fetched doctors once all repos resol
   (doctorsRepo.getAllDoctors as jest.Mock).mockResolvedValue([
     { id: 1, name: "Dr. A", specialty: "X", room: "1", status: "Available" },
   ]);
-  const patientsRepo = require("../data/patientsRepo");
-  const apptsRepo = require("../data/appointmentsRepo");
-  const servicesRepo = require("../data/servicesRepo");
-  const newsRepo = require("../data/newsRepo");
-  const staffRolesRepo = require("../data/staffRolesRepo");
-  patientsRepo.getAllPatients.mockResolvedValue([]);
-  apptsRepo.getAllAppointments.mockResolvedValue([]);
-  servicesRepo.getAllServices.mockResolvedValue([]);
-  newsRepo.getAllNews.mockResolvedValue([]);
-  staffRolesRepo.getAllStaffRoles.mockResolvedValue([]);
+  (patientsRepo.getAllPatients as jest.Mock).mockResolvedValue([]);
+  (apptsRepo.getAllAppointments as jest.Mock).mockResolvedValue([]);
+  (servicesRepo.getAllServices as jest.Mock).mockResolvedValue([]);
+  (newsRepo.getAllNews as jest.Mock).mockResolvedValue([]);
+  (staffRolesRepo.getAllStaffRoles as jest.Mock).mockResolvedValue([]);
 
   await act(async () => {
     render(
@@ -65,16 +65,11 @@ test("a failed write rolls back the optimistic update and does not crash", async
   (doctorsRepo.getAllDoctors as jest.Mock).mockResolvedValue([
     { id: 1, name: "Dr. A", specialty: "X", room: "1", status: "Available" },
   ]);
-  const patientsRepo = require("../data/patientsRepo");
-  const apptsRepo = require("../data/appointmentsRepo");
-  const servicesRepo = require("../data/servicesRepo");
-  const newsRepo = require("../data/newsRepo");
-  const staffRolesRepo = require("../data/staffRolesRepo");
-  patientsRepo.getAllPatients.mockResolvedValue([]);
-  apptsRepo.getAllAppointments.mockResolvedValue([]);
-  servicesRepo.getAllServices.mockResolvedValue([]);
-  newsRepo.getAllNews.mockResolvedValue([]);
-  staffRolesRepo.getAllStaffRoles.mockResolvedValue([]);
+  (patientsRepo.getAllPatients as jest.Mock).mockResolvedValue([]);
+  (apptsRepo.getAllAppointments as jest.Mock).mockResolvedValue([]);
+  (servicesRepo.getAllServices as jest.Mock).mockResolvedValue([]);
+  (newsRepo.getAllNews as jest.Mock).mockResolvedValue([]);
+  (staffRolesRepo.getAllStaffRoles as jest.Mock).mockResolvedValue([]);
   (doctorsRepo.updateDoctorStatus as jest.Mock).mockRejectedValue(new Error("network error"));
   (doctorsRepo.cycleDoctorStatus as jest.Mock).mockReturnValue("Busy");
 

@@ -79,7 +79,7 @@ export const ClinicDataProvider: React.FC<{ context: WebPartContext; children: R
   React.useEffect(() => {
     initPnp(context);
     let cancelled = false;
-    (async () => {
+    void (async () => {
       try {
         const [d, p, a, s, n, r] = await Promise.all([
           doctorsRepo.getAllDoctors(),
