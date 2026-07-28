@@ -5,6 +5,10 @@ module.exports = {
   testMatch: ["**/*.test.ts", "**/*.test.tsx"],
   moduleNameMapper: {
     "\\.(scss|sass|css)$": "identity-obj-proxy",
+    "^@pnp/sp$": "<rootDir>/jest-mocks/pnpsp.js",
+    "^@pnp/sp/(.*)$": "<rootDir>/jest-mocks/pnpsp.js",
+    "^@pnp/queryable$": "<rootDir>/jest-mocks/pnpqueryable.js",
+    "^@pnp/queryable/(.*)$": "<rootDir>/jest-mocks/pnpqueryable.js",
   },
   transform: {
     "^.+\\.tsx?$": ["ts-jest", { isolatedModules: true, tsconfig: { module: "commonjs", jsx: "react" } }],
