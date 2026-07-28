@@ -1259,7 +1259,7 @@ import { IStaffRole, StaffRoleName } from "./models";
 
 interface IStaffRoleListItem {
   Id: number;
-  Person: { Title: string; LoginName: string } | null;
+  Person: { Title: string; Name: string } | null;
   Role: StaffRoleName;
   DepartmentId: number | null;
   DoctorId: number | null;
@@ -1268,7 +1268,9 @@ interface IStaffRoleListItem {
 function toStaffRole(item: IStaffRoleListItem): IStaffRole {
   return {
     id: item.Id,
-    userLoginName: item.Person?.LoginName ?? "",
+    // SharePoint's User Information List exposes the claims-encoded login name via "Name",
+    // not "LoginName" (which isn't a selectable REST property on Person fields).
+    userLoginName: item.Person?.Name ?? "",
     userDisplayName: item.Person?.Title ?? "",
     role: item.Role,
     departmentServiceId: item.DepartmentId,
@@ -1280,7 +1282,7 @@ export async function getAllStaffRoles(): Promise<IStaffRole[]> {
   const sp = getSP();
   const items: IStaffRoleListItem[] = await sp.web.lists
     .getByTitle(LIST_NAMES.StaffRoles)
-    .items.select("Id", "Person/Title", "Person/LoginName", "Role", "DepartmentId", "DoctorId")
+    .items.select("Id", "Person/Title", "Person/Name", "Role", "DepartmentId", "DoctorId")
     .expand("Person")
     .getAll();
   return items.map(toStaffRole);
