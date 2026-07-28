@@ -18,11 +18,11 @@
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Advanced
     "group": { "default": "Advanced" },
-    "title": { "default": "ClinicDashboard" },
-    "description": { "default": "ClinicDashboard description" },
-    "officeFabricIconFontName": "Page",
+    "title": { "default": "Clinic Dashboard Patient Portal" },
+    "description": { "default": "Operations dashboard for urgent cases, doctor availability, appointments, services and clinic news." },
+    "officeFabricIconFontName": "Health",
     "properties": {
-      "description": "ClinicDashboard"
+      "title": "Clinic Dashboard Patient Portal"
     }
   }]
 }
