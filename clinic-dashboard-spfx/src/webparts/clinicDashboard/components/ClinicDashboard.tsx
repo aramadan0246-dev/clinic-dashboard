@@ -66,6 +66,8 @@ function ClinicDashboardContent({ context }: IClinicDashboardProps): JSX.Element
     []
   );
 
+  const currentUserInitial = context.pageContext.user.displayName.trim().charAt(0).toUpperCase() || "?";
+
   const urgentCases = data.patients.filter((p) => isUrgent(p.status));
   const roster = data.patients.filter((p) => !isUrgent(p.status));
   const viewMeta = VIEW_META[view];
@@ -161,7 +163,7 @@ function ClinicDashboardContent({ context }: IClinicDashboardProps): JSX.Element
           </nav>
           <div style={{ marginTop: "auto", padding: 14, background: "#ffffff0F", borderRadius: 12 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <Avatar initials="SB" color="#8FD9C9" size={36} />
+              <Avatar initials={currentUserInitial} color="#8FD9C9" size={36} />
               <div>
                 <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: 12.5, color: "#fff" }}>{context.pageContext.user.displayName}</div>
                 <div style={{ fontSize: 11, color: "#9FC2BB" }}>{data.currentUserRole.role ?? "Read-only"}</div>
@@ -194,7 +196,7 @@ function ClinicDashboardContent({ context }: IClinicDashboardProps): JSX.Element
                 <Bell size={16} color={C.inkSoft} />
                 <span style={{ position: "absolute", top: 6, right: 7, width: 6, height: 6, borderRadius: 999, background: C.urgent }} />
               </button>
-              <Avatar initials="SB" color={C.primary} size={36} />
+              <Avatar initials={currentUserInitial} color={C.primary} size={36} />
             </div>
           </div>
 
@@ -222,6 +224,7 @@ function ClinicDashboardContent({ context }: IClinicDashboardProps): JSX.Element
               {view === "dashboard" && (
                 <DashboardView
                   doctors={data.doctors}
+                  patients={data.patients}
                   urgentCases={urgentCases}
                   appts={data.appointments}
                   news={data.news}
