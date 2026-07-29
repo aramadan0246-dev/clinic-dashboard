@@ -44,7 +44,7 @@ export async function addDoctor(data: {
     Room: data.room,
     Status: "Available",
   });
-  return toDoctor(result.data as IDoctorListItem);
+  return toDoctor(result as IDoctorListItem);
 }
 
 export async function updateDoctorStatus(id: number, status: DoctorStatus): Promise<void> {

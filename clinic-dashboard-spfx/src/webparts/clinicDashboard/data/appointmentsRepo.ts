@@ -65,7 +65,7 @@ export async function addAppointment(data: {
     Room: data.room,
     Status: "Upcoming",
   });
-  return toAppointment(result.data as IApptListItem);
+  return toAppointment(result as IApptListItem);
 }
 
 export function cycleApptStatus(current: AppointmentStatus): AppointmentStatus {

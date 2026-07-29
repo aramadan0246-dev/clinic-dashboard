@@ -47,7 +47,7 @@ export async function addService(data: {
     Status: "Open",
     Queue: 0,
   });
-  return toService(result.data as IServiceListItem);
+  return toService(result as IServiceListItem);
 }
 
 export function flipServiceStatus(current: ServiceStatus): ServiceStatus {

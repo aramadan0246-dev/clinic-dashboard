@@ -55,7 +55,7 @@ export async function addNews(data: {
     Excerpt: data.excerpt,
     Body: data.body,
   });
-  return toNewsItem(result.data as INewsListItem);
+  return toNewsItem(result as INewsListItem);
 }
 
 export async function removeNews(id: number): Promise<void> {

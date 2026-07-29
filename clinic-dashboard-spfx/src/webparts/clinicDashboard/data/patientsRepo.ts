@@ -99,7 +99,7 @@ export async function addPatient(data: {
     FlaggedAt: now,
     LastVisit: now,
   });
-  return toPatient(result.data as IPatientListItem);
+  return toPatient(result as IPatientListItem);
 }
 
 export async function dischargePatient(id: number): Promise<void> {
