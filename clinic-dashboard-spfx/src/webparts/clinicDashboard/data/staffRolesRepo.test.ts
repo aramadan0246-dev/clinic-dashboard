@@ -20,3 +20,7 @@ test("findRoleForUser matches on exact login name", () => {
 test("findRoleForUser returns undefined when no match (defaults to read-only downstream)", () => {
   expect(findRoleForUser("i:0#.f|membership|unknown@contoso.com", roles)).toBeUndefined();
 });
+
+test("findRoleForUser matches regardless of casing or surrounding whitespace", () => {
+  expect(findRoleForUser(" I:0#.F|MEMBERSHIP|Nurse@Contoso.com ", roles)).toBe(roles[0]);
+});

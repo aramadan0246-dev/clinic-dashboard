@@ -15,6 +15,16 @@ export function useCurrentUserRole(
 ): ICurrentUserRole {
   return useMemo(() => {
     const match = findRoleForUser(currentUserLoginName, staffRoles);
+    if (!match && staffRoles.length > 0) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "useCurrentUserRole: no StaffRoles row matched the current user - defaulting to read-only.",
+        {
+          currentUserLoginName,
+          knownStaffRoleLoginNames: staffRoles.map((r) => r.userLoginName),
+        }
+      );
+    }
     return {
       role: match?.role,
       departmentServiceId: match?.departmentServiceId ?? null,

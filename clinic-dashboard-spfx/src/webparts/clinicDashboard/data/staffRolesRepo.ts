@@ -37,6 +37,11 @@ export async function getAllStaffRoles(): Promise<IStaffRole[]> {
   return items.map(toStaffRole);
 }
 
+function normalizeLoginName(loginName: string): string {
+  return loginName.trim().toLowerCase();
+}
+
 export function findRoleForUser(loginName: string, roles: IStaffRole[]): IStaffRole | undefined {
-  return roles.find((r) => r.userLoginName === loginName);
+  const target = normalizeLoginName(loginName);
+  return roles.find((r) => normalizeLoginName(r.userLoginName) === target);
 }
