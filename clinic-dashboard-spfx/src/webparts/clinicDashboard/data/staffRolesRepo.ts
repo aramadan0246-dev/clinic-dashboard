@@ -38,7 +38,13 @@ export async function getAllStaffRoles(): Promise<IStaffRole[]> {
 }
 
 function normalizeLoginName(loginName: string): string {
-  return loginName.trim().toLowerCase();
+  // Compare on the identity tail only (email/UPN), not the full string - some
+  // environments hand back a claims-encoded login ("i:0#.f|membership|user@tenant.com")
+  // and others a bare UPN ("user@tenant.com") for the exact same person, depending on
+  // whether it came from context.pageContext.user.loginName or a Person field's "Name".
+  const trimmed = loginName.trim();
+  const tail = trimmed.includes("|") ? trimmed.slice(trimmed.lastIndexOf("|") + 1) : trimmed;
+  return tail.toLowerCase();
 }
 
 export function findRoleForUser(loginName: string, roles: IStaffRole[]): IStaffRole | undefined {
