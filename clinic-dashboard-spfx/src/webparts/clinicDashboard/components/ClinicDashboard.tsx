@@ -144,7 +144,7 @@ function ClinicDashboardContent({ context }: IClinicDashboardProps): JSX.Element
             <div style={{ width: 34, height: 34, borderRadius: 9, background: "#ffffff1A", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <ShieldCheck size={18} color="#8FD9C9" />
             </div>
-            <div style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 700, fontSize: 15.5, color: "#fff" }}>B Well Clinic</div>
+            <div style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 700, fontSize: 15.5, color: "#fff" }}>B-Well Clinic</div>
           </div>
           <nav style={{ display: "flex", flexDirection: "column", gap: 3 }}>
             {NAV.map((n) => {
