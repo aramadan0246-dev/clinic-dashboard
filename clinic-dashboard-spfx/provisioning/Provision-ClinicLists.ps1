@@ -2,13 +2,6 @@
 # Run once against the target site by a site owner/admin.
 # Requires: Install-Module PnP.PowerShell -Scope CurrentUser
 
-param(
-  [Parameter(Mandatory = $true)]
-  [string]$SiteUrl = "https://7r4ptj.sharepoint.com/sites/CDPP",
-  [Parameter(Mandatory = $false)]
-  [string]$ClientId = "93938c97-a64e-4ea3-b160-8b8571f76f39"
-)
-
 $ErrorActionPreference = "Stop"
 
 if (-not (Get-Module -ListAvailable -Name PnP.PowerShell)) {
